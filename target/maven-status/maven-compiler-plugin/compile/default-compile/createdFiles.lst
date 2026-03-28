@@ -1,0 +1,14 @@
+MephiPackage\objects\Curse.class
+MephiPackage\readers\JSONReader.class
+MephiPackage\utils\MissionPrinter.class
+MephiPackage\readers\TXTReader.class
+MephiPackage\core\MissionTool.class
+MephiPackage\utils\FileChooser.class
+MephiPackage\readers\XMLReader.class
+MephiPackage\objects\Mission.class
+MephiPackage\objects\Sorcerer.class
+MephiPackage\readers\Reader.class
+MephiPackage\utils\FileTypeDetector.class
+MephiPackage\objects\Technique.class
+MephiPackage\core\MissionToolGUI.class
+MephiPackage\utils\EmptyFileException.class
