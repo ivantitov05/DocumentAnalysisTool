@@ -8,10 +8,7 @@ import java.io.IOException;
 
 public class JSONReader implements Reader {
 
-    File file;
-    public JSONReader(File file) throws IOException {
-        this.file = file;
-    }
+    public JSONReader(){}
 
     @Override
     public Mission extract(File file) throws IOException {

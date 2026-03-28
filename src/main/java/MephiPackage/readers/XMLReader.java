@@ -9,10 +9,8 @@ import java.io.IOException;
 
 public class XMLReader implements Reader {
 
-    File file;
-    public XMLReader(File file) throws IOException {
-        this.file = file;
-    }
+
+    public XMLReader(){}
 
     @Override
     public Mission extract(File file) throws IOException {

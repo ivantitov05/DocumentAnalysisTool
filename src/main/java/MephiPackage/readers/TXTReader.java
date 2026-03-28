@@ -8,26 +8,16 @@ import MephiPackage.objects.Technique;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TXTReader implements Reader {
 
-    private File file;
-
-    public TXTReader(File file) {
-        this.file = file;
-    }
+    public TXTReader() {}
 
     @Override
     public Mission extract(File file) throws IOException {
-        this.file = file;
-        return extract();
-    }
-
-    public Mission extract() throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get(file.getPath()));
+        List<String> lines = Files.readAllLines(file.toPath());
         if (lines.isEmpty()) {
             throw new IOException("Файл пуст");
         }
@@ -61,7 +51,11 @@ public class TXTReader implements Reader {
                     mission.setOutcome(value);
                     break;
                 case "damageCost":
-                    mission.setDamageCost(Long.parseLong(value));
+                    try {
+                        mission.setDamageCost(Long.parseLong(value));
+                    } catch (NumberFormatException e) {
+                        System.err.println("Ошибка: damageCost не число: " + value);
+                    }
                     break;
                 case "curse":
                     processCurseField(key, value, curses);
