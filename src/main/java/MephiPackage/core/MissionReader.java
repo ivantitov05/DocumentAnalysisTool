@@ -16,6 +16,9 @@ public class MissionReader {
         CREATORS.put("json", JSONReaderCreator::new);
         CREATORS.put("xml", XMLReaderCreator::new);
         CREATORS.put("txt", TXTReaderCreator::new);
+
+        CREATORS.put("yaml", YAMLReaderCreator::new);
+        CREATORS.put("initxt", IniTXTReaderCreator::new);
     }
 
     public Mission readMission(File file) throws IOException {

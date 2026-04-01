@@ -9,13 +9,13 @@ import java.io.IOException;
 public abstract class ReaderCreator {
     public abstract Reader createReader();
 
-    public Mission readMission (File file) throws IOException {
+    public Mission readMission(File file) throws IOException {
         try {
             Reader reader = createReader();
             return reader.extract(file);
-        }catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Ошибка при чтении файла: " + e.getMessage());
-            return null;
+            throw e;
         }
     }
 }
