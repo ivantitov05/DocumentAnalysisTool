@@ -12,6 +12,7 @@ public class JSONReader implements Reader {
 
     @Override
     public Mission extract(File file) throws IOException {
+        System.out.println("json");
         ObjectMapper mapper = new ObjectMapper();
         Mission mission = mapper.readValue(file, Mission.class);
 

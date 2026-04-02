@@ -34,7 +34,7 @@ public class MissionPrinter {
     private static void printCurseInfo(List<Curse> curses) {
         System.out.println("Проклятья :");
         if (curses.isEmpty()) {
-            System.out.println("Нет волшебников");
+            System.out.println("Нет проклятий");
             return;
         }
 

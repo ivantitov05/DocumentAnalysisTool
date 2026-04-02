@@ -18,6 +18,7 @@ public class IniTXTReader implements Reader {
 
     @Override
     public Mission extract(File file) throws IOException {
+        System.out.println("новый txt");
         List<String> lines = Files.readAllLines(file.toPath());
 
         builder.reset();

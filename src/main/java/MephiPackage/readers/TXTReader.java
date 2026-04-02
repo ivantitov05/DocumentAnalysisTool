@@ -17,6 +17,7 @@ public class TXTReader implements Reader {
 
     @Override
     public Mission extract(File file) throws IOException {
+        System.out.println("старый txt");
         List<String> lines = Files.readAllLines(file.toPath());
         if (lines.isEmpty()) {
             throw new IOException("Файл пуст");
@@ -54,7 +55,7 @@ public class TXTReader implements Reader {
                     try {
                         mission.setDamageCost(Long.parseLong(value));
                     } catch (NumberFormatException e) {
-                        System.err.println("Ошибка: damageCost не число: " + value);
+                        throw new IOException("Ошибка в поле damageCost: '" + value + "' не является числом");
                     }
                     break;
                 case "curse":

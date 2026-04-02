@@ -1,32 +1,32 @@
 package MephiPackage.core;
 
 import MephiPackage.objects.Mission;
+import MephiPackage.utils.FileFormat;
 import MephiPackage.utils.FileTypeDetector;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumMap;
 import java.util.function.Supplier;
 
 public class MissionReader {
 
-    private static final Map<String, Supplier<ReaderCreator>> CREATORS = new HashMap<>();
+    private static final EnumMap<FileFormat, Supplier<ReaderCreator>> CREATORS = new EnumMap<>(FileFormat.class);
 
     static {
-        CREATORS.put("json", JSONReaderCreator::new);
-        CREATORS.put("xml", XMLReaderCreator::new);
-        CREATORS.put("txt", TXTReaderCreator::new);
-
-        CREATORS.put("yaml", YAMLReaderCreator::new);
-        CREATORS.put("initxt", IniTXTReaderCreator::new);
+        CREATORS.put(FileFormat.JSON, JSONReaderCreator::new);
+        CREATORS.put(FileFormat.XML, XMLReaderCreator::new);
+        CREATORS.put(FileFormat.TXT, TXTReaderCreator::new);
+        CREATORS.put(FileFormat.YAML, YAMLReaderCreator::new);
+        CREATORS.put(FileFormat.INITXT, IniTXTReaderCreator::new);
+        CREATORS.put(FileFormat.OLDTXT, TXTReaderCreator::new);
     }
 
     public Mission readMission(File file) throws IOException {
-        String type = FileTypeDetector.checkType(file);
+        FileFormat format = FileTypeDetector.checkType(file);
 
-        Supplier<ReaderCreator> creatorSupplier = CREATORS.get(type);
+        Supplier<ReaderCreator> creatorSupplier = CREATORS.get(format);
         if (creatorSupplier == null) {
-            throw new IOException("Неподдерживаемый формат: " + type);
+            throw new IOException("Неподдерживаемый формат: " + format.getFormatId());
         }
 
         ReaderCreator creator = creatorSupplier.get();

@@ -20,6 +20,7 @@ public class YAMLReader implements Reader {
 
     @Override
     public Mission extract(File file) throws IOException {
+        System.out.println("yaml");
         builder.reset();
 
         JsonNode root = yamlMapper.readTree(file);

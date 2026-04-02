@@ -14,6 +14,7 @@ public class XMLReader implements Reader {
 
     @Override
     public Mission extract(File file) throws IOException {
+        System.out.println("xml");
         XmlMapper xmlMapper = new XmlMapper();
 
         Mission mission = xmlMapper.readValue(file, Mission.class);
