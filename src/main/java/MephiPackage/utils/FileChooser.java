@@ -40,4 +40,21 @@ public class FileChooser {
             return null;
         }
     }
+
+    public static File selectFolder() {
+        JFileChooser folderChooser = new JFileChooser();
+        folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        folderChooser.setDialogTitle("Выберите папку с миссиями");
+
+        int result = folderChooser.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFolder = folderChooser.getSelectedFile();
+            System.out.println("Выбрана папка: " + selectedFolder.getAbsolutePath());
+            return selectedFolder;
+        } else {
+            System.out.println("Папка не выбрана");
+            return null;
+        }
+    }
 }
