@@ -1,77 +1,88 @@
 package MephiPackage.core;
 
-import MephiPackage.objects.*;
+import MephiPackage.objects.Mission;
+import MephiPackage.report.*;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MissionToolGUI extends JFrame {
-    private JTextArea textArea;
 
-    public MissionToolGUI(Mission mission){
+    private Mission mission;
+    private ReportConfig reportConfig;
+    private JTextArea textArea;
+    private ReportConfigPanel configPanel;
+    private JComboBox<String> reportTypeCombo;
+
+    public MissionToolGUI(Mission mission) {
+        this(mission, new ReportConfig());
+    }
+
+    public MissionToolGUI(Mission mission, ReportConfig reportConfig) {
+        this.mission = mission;
+        this.reportConfig = reportConfig;
         setTitle("Информация о миссии");
-        setSize(800,600);
+        setSize(900, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        initComponents();
+        generateReport();
+    }
+
+    private void initComponents() {
+        setLayout(new BorderLayout());
+
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topPanel.add(new JLabel("Тип отчёта:"));
+
+        reportTypeCombo = new JComboBox<>(new String[]{"summary", "detailed", "risk", "customizable"});
+        reportTypeCombo.addActionListener(e -> generateReport());
+        topPanel.add(reportTypeCombo);
+
+        JButton configButton = new JButton("Настройки");
+        configButton.addActionListener(e -> showConfigDialog());
+        topPanel.add(configButton);
+
+        add(topPanel, BorderLayout.NORTH);
+
         textArea = new JTextArea();
         textArea.setEditable(false);
-
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        add(scrollPane, BorderLayout.CENTER);
-
-        textArea.setText(missionInfo(mission));
+        textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        add(new JScrollPane(textArea), BorderLayout.CENTER);
     }
 
-    private String missionInfo(Mission mission){
-        String str = "";
-        str += "Информация о миссии\n";
-        str += "  ID миссии: " + mission.getMissionId() + "\n";
-        str += "  Дата: " + mission.getDate() + "\n";
+    private void generateReport() {
+        String selectedType = (String) reportTypeCombo.getSelectedItem();
+        ReportGenerator generator;
 
-        if (mission.getComment() != null && !mission.getComment().isEmpty()) {
-            str += "  Комментарий: " + mission.getComment() + "\n";
-        }
-
-        str += "Проклятия\n";
-        if (mission.getCurses() != null && !mission.getCurses().isEmpty()) {
-            for (int i = 0; i < mission.getCurses().size(); i++) {
-                Curse c = mission.getCurses().get(i);
-                str += "  " + (i + 1) + ". " + nullSafe(c.getName()) + "\n";
-                str += "     Уровень: " + nullSafe(c.getThreatLevel()) + "\n";
-            }
+        if ("customizable".equals(selectedType)) {
+            generator = new CustomizableReportGenerator(reportConfig);
         } else {
-            str += "  (нет)\n";
-        }
-        str += "\n";
-
-        str += "Участники\n";
-        if (mission.getSorcerers() != null && !mission.getSorcerers().isEmpty()) {
-            for (int i = 0; i < mission.getSorcerers().size(); i++) {
-                Sorcerer s = mission.getSorcerers().get(i);
-                str += "  " + (i + 1) + ". " + nullSafe(s.getName()) + "\n";
-                str += "     Ранг: " + nullSafe(s.getRank()) + "\n";
-            }
-        } else {
-            str += "  (нет)\n";
-        }
-        str += "\n";
-
-        str += "Техники\n";
-        if (mission.getTechniques() != null && !mission.getTechniques().isEmpty()) {
-            for (int i = 0; i < mission.getTechniques().size(); i++) {
-                Technique t = mission.getTechniques().get(i);
-                str += "  " + (i + 1) + ". " + nullSafe(t.getName()) + "\n";
-                str += "     Тип: " + nullSafe(t.getType()) + "\n";
-                str += "     Владелец: " + nullSafe(t.getOwner()) + "\n";
-                str += "     Урон: " + t.getDamage() + "\n";
-            }
+            generator = ReportFactory.getGenerator(selectedType);
         }
 
-        return str;
+        String report = generator.generate(mission);
+        textArea.setText(report);
+        textArea.setCaretPosition(0);
     }
 
-    private String nullSafe(String str) {
-        return str != null ? str : "—";
+    private void showConfigDialog() {
+        JDialog dialog = new JDialog(this, "Настройки отчёта", true);
+        dialog.setLayout(new BorderLayout());
+        dialog.setSize(400, 500);
+        dialog.setLocationRelativeTo(this);
+
+        ReportConfigPanel panel = new ReportConfigPanel(reportConfig);
+        JButton saveButton = new JButton("Сохранить");
+        saveButton.addActionListener(e -> {
+            reportConfig = panel.getUpdatedConfig();
+            dialog.dispose();
+            generateReport();
+        });
+
+        dialog.add(panel, BorderLayout.CENTER);
+        dialog.add(saveButton, BorderLayout.SOUTH);
+        dialog.setVisible(true);
     }
 }

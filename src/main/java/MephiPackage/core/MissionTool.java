@@ -1,6 +1,7 @@
 package MephiPackage.core;
 
 import MephiPackage.objects.Mission;
+import MephiPackage.report.ReportConfig;
 import MephiPackage.utils.FileChooser;
 import MephiPackage.utils.MissionPrinter;
 
@@ -20,7 +21,7 @@ public class MissionTool {
 
             if (mission != null) {
                 MissionPrinter.print(mission);
-                new MissionToolGUI(mission).setVisible(true);
+                new MissionToolGUI(mission, new ReportConfig()).setVisible(true);
             }
 
         } catch (IOException e) {

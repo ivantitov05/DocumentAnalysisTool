@@ -1,0 +1,222 @@
+package MephiPackage.report;
+
+import MephiPackage.objects.Mission;
+import MephiPackage.objects.Curse;
+
+public class RiskReportGenerator implements ReportGenerator {
+
+    private static final String SEPARATOR = "============================================================";
+
+    @Override
+    public String generate(Mission mission) {
+        if (mission == null) {
+            return "Ошибка: миссия не загружена";
+        }
+
+        String result = "";
+
+        result += SEPARATOR + "\n";
+        result += "                 АНАЛИЗ РИСКОВ\n";
+        result += SEPARATOR + "\n\n";
+
+        int riskLevel = calculateRiskLevel(mission);
+        result += "Общий уровень риска\n";
+        result += "  Оценка: " + getRiskLevelString(riskLevel) + "\n";
+        result += "  Баллов: " + riskLevel + " / 10\n\n";
+
+        result += riskFactors(mission);
+
+        result += criticalIssues(mission);
+
+        result += recommendations(mission);
+
+        result += SEPARATOR + "\n";
+
+        return result;
+    }
+
+    private int calculateRiskLevel(Mission mission) {
+        int level = 0;
+
+        if (mission.getCurses() != null) {
+            for (Curse c : mission.getCurses()) {
+                String threat = c.getThreatLevel();
+                if (threat == null) continue;
+
+                switch (threat.toUpperCase()) {
+                    case "CRITICAL": level += 3; break;
+                    case "HIGH": level += 2; break;
+                    case "MEDIUM": level += 1; break;
+                }
+            }
+        }
+
+        if (mission.getDamageCost() > 1_000_000) {
+            level += 2;
+        } else if (mission.getDamageCost() > 500_000) {
+            level += 1;
+        }
+
+        String outcome = mission.getOutcome();
+        if (outcome != null) {
+            if (outcome.equalsIgnoreCase("FAILURE")) {
+                level += 2;
+            } else if (outcome.equalsIgnoreCase("PARTIAL")) {
+                level += 1;
+            }
+        }
+
+        return Math.min(level, 10);
+    }
+
+    private String getRiskLevelString(int level) {
+        if (level >= 8) return "КРИТИЧЕСКИЙ";
+        if (level >= 6) return "ВЫСОКИЙ";
+        if (level >= 4) return "ПОВЫШЕННЫЙ";
+        if (level >= 2) return "СРЕДНИЙ";
+        return "НИЗКИЙ";
+    }
+
+    private String riskFactors(Mission mission) {
+        String result = "";
+        result += "【ФАКТОРЫ РИСКА】\n";
+
+        if (mission.getCurses() != null && !mission.getCurses().isEmpty()) {
+            result += "  Проклятия:\n";
+            for (Curse c : mission.getCurses()) {
+                String threat = c.getThreatLevel();
+                result += "    • " + nullSafe(c.getName());
+                if (threat != null) {
+                    result += " — " + getThreatRiskDescription(threat);
+                }
+                result += "\n";
+            }
+        }
+
+        if (mission.getDamageCost() > 500_000) {
+            result += "  Финансовый ущерб: " + mission.getDamageCost() + "\n";
+            if (mission.getDamageCost() > 1_000_000) {
+                result += "    → КРИТИЧЕСКИЙ уровень материального урона\n";
+            } else {
+                result += "    → ВЫСОКИЙ уровень материального урона\n";
+            }
+        }
+
+        String outcome = mission.getOutcome();
+        if (outcome != null && !outcome.equalsIgnoreCase("SUCCESS")) {
+            result += "  Результат миссии: " + outcome + "\n";
+            if (outcome.equalsIgnoreCase("FAILURE")) {
+                result += "    Полный провал, требуется пересмотр стратегии\n";
+            } else if (outcome.equalsIgnoreCase("PARTIAL")) {
+                result += "    Частичный успех, цели достигнуты не полностью\n";
+            }
+        }
+
+        result += "\n";
+        return result;
+    }
+
+    private String criticalIssues(Mission mission) {
+        String result = "";
+        boolean hasCritical = false;
+
+        result += "【КРИТИЧЕСКИЕ ЗАМЕЧАНИЯ】\n";
+
+        if (mission.getCurses() != null) {
+            for (Curse c : mission.getCurses()) {
+                String threat = c.getThreatLevel();
+                if (threat != null && threat.equalsIgnoreCase("CRITICAL")) {
+                    result += "  Strategic launch detected: " + nullSafe(c.getName()) + "\n";
+                    hasCritical = true;
+                }
+            }
+        }
+
+        String outcome = mission.getOutcome();
+        if (outcome != null && outcome.equalsIgnoreCase("FAILURE")) {
+            result += "  YOU DEAD — требуется служебное расследование\n";
+            hasCritical = true;
+        }
+
+        if (mission.getDamageCost() > 2_000_000) {
+            result += "  Катастрофа — " + mission.getDamageCost() + "\n";
+            hasCritical = true;
+        }
+
+        if (!hasCritical) {
+            result += "  (критических замечаний нет)\n";
+        }
+
+        result += "\n";
+        return result;
+    }
+
+    private String recommendations(Mission mission) {
+        String result = "";
+        result += "【РЕКОМЕНДАЦИИ】\n";
+
+        int recommendationsCount = 0;
+
+        if (mission.getCurses() != null) {
+            for (Curse c : mission.getCurses()) {
+                String threat = c.getThreatLevel();
+                if (threat != null && threat.equalsIgnoreCase("CRITICAL")) {
+                    result += "  • Немедленно усилить состав группы для борьбы с проклятием \"" + nullSafe(c.getName()) + "\"\n";
+                    recommendationsCount++;
+                } else if (threat != null && threat.equalsIgnoreCase("HIGH")) {
+                    result += "  • Привлечь мага первого ранга для нейтрализации проклятия \"" + nullSafe(c.getName()) + "\"\n";
+                    recommendationsCount++;
+                }
+            }
+        }
+
+        if (mission.getDamageCost() > 1_000_000) {
+            result += "  • Разработать протокол минимизации ущерба для будущих операций\n";
+            recommendationsCount++;
+        }
+
+        String outcome = mission.getOutcome();
+        if (outcome != null && outcome.equalsIgnoreCase("FAILURE")) {
+            result += "  • Провести разбор причин провала с участием всех участников\n";
+            result += "  • Пересмотреть тактику и подготовку группы\n";
+            recommendationsCount++;
+        } else if (outcome != null && outcome.equalsIgnoreCase("PARTIAL")) {
+            result += "  • Проанализировать невыполненные цели миссии\n";
+            recommendationsCount++;
+        }
+
+        if (mission.getEconomicAssessment() != null && mission.getEconomicAssessment().getInsuranceCovered() != null) {
+            if (!mission.getEconomicAssessment().getInsuranceCovered()) {
+                result += "  • Рекомендуется оформить страховое покрытие на будущие миссии\n";
+                recommendationsCount++;
+            }
+        }
+
+        if (recommendationsCount == 0) {
+            result += "  (рекомендации не требуются, уровень риска приемлемый)\n";
+        }
+
+        result += "\n";
+        return result;
+    }
+
+    private String getThreatRiskDescription(String threatLevel) {
+        if (threatLevel == null) return "неизвестный уровень";
+        switch (threatLevel.toUpperCase()) {
+            case "CRITICAL": return "КРИТИЧЕСКАЯ ОПАСНОСТЬ";
+            case "HIGH": return "ВЫСОКАЯ ОПАСНОСТЬ";
+            case "MEDIUM": return "СРЕДНЯЯ ОПАСНОСТЬ";
+            case "LOW": return "НИЗКАЯ ОПАСНОСТЬ";
+            default: return threatLevel;
+        }
+    }
+
+    private String nullSafe(String str) {
+        return str != null ? str : "—";
+    }
+
+    @Override
+    public String getType() {
+        return "risk";
+    }
+}
