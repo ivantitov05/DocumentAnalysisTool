@@ -23,6 +23,10 @@ public class XMLReader implements Reader {
             throw new IOException("XML файл не содержит missionId");
         }
 
+        if (mission.getCurses() == null || mission.getCurses().isEmpty()) {
+            throw new IOException("Отсутствует обязательный блок curse");
+        }
+
         return mission;
     }
 }

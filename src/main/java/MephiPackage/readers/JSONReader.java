@@ -20,6 +20,10 @@ public class JSONReader implements Reader {
             throw new IOException("Файл не содержит обязательного поля missionId");
         }
 
+        if (mission.getCurses() == null || mission.getCurses().isEmpty()) {
+            throw new IOException("Отсутствует обязательный блок curse");
+        }
+
         return mission;
     }
 }

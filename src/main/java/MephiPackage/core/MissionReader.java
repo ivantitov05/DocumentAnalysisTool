@@ -32,4 +32,25 @@ public class MissionReader {
         ReaderCreator creator = creatorSupplier.get();
         return creator.readMission(file);
     }
+
+//    public Mission readMission(DataSource source) throws IOException {
+//        String data = source.getData();
+//       FileFormat format = FileTypeDetector.checkTypeFromString(data);
+//
+//        Supplier<ReaderCreator> creatorSupplier = CREATORS.get(format);
+//        if (creatorSupplier == null) {
+//            throw new IOException("Неподдерживаемый формат: " + format.getFormatId());
+//        }
+//
+//        ReaderCreator creator = creatorSupplier.get();
+//
+//        File tempFile = File.createTempFile("mission_", "." + format.getExtension());
+//        java.nio.file.Files.writeString(tempFile.toPath(), data);
+//
+//        try {
+//            return creator.readMission(tempFile);
+//        } finally {
+//            tempFile.delete();
+//        }
+//    }
 }

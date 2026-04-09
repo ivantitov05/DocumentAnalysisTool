@@ -1,5 +1,6 @@
 package MephiPackage.report;
 
+import MephiPackage.enums.ThreatLevel;
 import MephiPackage.objects.Mission;
 import MephiPackage.objects.Curse;
 
@@ -40,13 +41,23 @@ public class RiskReportGenerator implements ReportGenerator {
 
         if (mission.getCurses() != null) {
             for (Curse c : mission.getCurses()) {
-                String threat = c.getThreatLevel();
+                ThreatLevel threat = c.getThreatLevel();
                 if (threat == null) continue;
 
-                switch (threat.toUpperCase()) {
-                    case "CRITICAL": level += 3; break;
-                    case "HIGH": level += 2; break;
-                    case "MEDIUM": level += 1; break;
+                switch (threat) {
+                    case SPECIAL_GRADE:
+                        level += 3;
+                        break;
+                    case HIGH:
+                        level += 2;
+                        break;
+                    case MEDIUM:
+                        level += 1;
+                        break;
+                    case LOW:
+                    case UNKNOWN:
+                    default:
+                        break;
                 }
             }
         }
@@ -58,12 +69,10 @@ public class RiskReportGenerator implements ReportGenerator {
         }
 
         String outcome = mission.getOutcome();
-        if (outcome != null) {
-            if (outcome.equalsIgnoreCase("FAILURE")) {
-                level += 2;
-            } else if (outcome.equalsIgnoreCase("PARTIAL")) {
-                level += 1;
-            }
+        if ("FAILURE".equals(outcome)) {
+            level += 2;
+        } else if ("PARTIAL".equals(outcome)) {
+            level += 1;
         }
 
         return Math.min(level, 10);
@@ -84,7 +93,7 @@ public class RiskReportGenerator implements ReportGenerator {
         if (mission.getCurses() != null && !mission.getCurses().isEmpty()) {
             result += "  Проклятия:\n";
             for (Curse c : mission.getCurses()) {
-                String threat = c.getThreatLevel();
+                ThreatLevel threat = c.getThreatLevel();
                 result += "    • " + nullSafe(c.getName());
                 if (threat != null) {
                     result += " — " + getThreatRiskDescription(threat);
@@ -124,9 +133,9 @@ public class RiskReportGenerator implements ReportGenerator {
 
         if (mission.getCurses() != null) {
             for (Curse c : mission.getCurses()) {
-                String threat = c.getThreatLevel();
-                if (threat != null && threat.equalsIgnoreCase("CRITICAL")) {
-                    result += "  Strategic launch detected: " + nullSafe(c.getName()) + "\n";
+                ThreatLevel threat = c.getThreatLevel();
+                if (threat == ThreatLevel.SPECIAL_GRADE) {
+                    result += "  ОБНАРУЖЕНО ПРОКЛЯТИЕ ОСОБОГО РАНГА: " + nullSafe(c.getName()) + "\n";
                     hasCritical = true;
                 }
             }
@@ -134,12 +143,12 @@ public class RiskReportGenerator implements ReportGenerator {
 
         String outcome = mission.getOutcome();
         if (outcome != null && outcome.equalsIgnoreCase("FAILURE")) {
-            result += "  YOU DEAD — требуется служебное расследование\n";
+            result += "  МИССИЯ ПРОВАЛЕНА — требуется служебное расследование\n";
             hasCritical = true;
         }
 
         if (mission.getDamageCost() > 2_000_000) {
-            result += "  Катастрофа — " + mission.getDamageCost() + "\n";
+            result += "  КАТАСТРОФИЧЕСКИЙ УЩЕРБ — " + mission.getDamageCost() + "\n";
             hasCritical = true;
         }
 
@@ -159,11 +168,11 @@ public class RiskReportGenerator implements ReportGenerator {
 
         if (mission.getCurses() != null) {
             for (Curse c : mission.getCurses()) {
-                String threat = c.getThreatLevel();
-                if (threat != null && threat.equalsIgnoreCase("CRITICAL")) {
+                ThreatLevel threat = c.getThreatLevel();
+                if (threat == ThreatLevel.SPECIAL_GRADE) {
                     result += "  • Немедленно усилить состав группы для борьбы с проклятием \"" + nullSafe(c.getName()) + "\"\n";
                     recommendationsCount++;
-                } else if (threat != null && threat.equalsIgnoreCase("HIGH")) {
+                } else if (threat == ThreatLevel.HIGH) {
                     result += "  • Привлечь мага первого ранга для нейтрализации проклятия \"" + nullSafe(c.getName()) + "\"\n";
                     recommendationsCount++;
                 }
@@ -200,14 +209,14 @@ public class RiskReportGenerator implements ReportGenerator {
         return result;
     }
 
-    private String getThreatRiskDescription(String threatLevel) {
+    private String getThreatRiskDescription(ThreatLevel threatLevel) {
         if (threatLevel == null) return "неизвестный уровень";
-        switch (threatLevel.toUpperCase()) {
-            case "CRITICAL": return "КРИТИЧЕСКАЯ ОПАСНОСТЬ";
-            case "HIGH": return "ВЫСОКАЯ ОПАСНОСТЬ";
-            case "MEDIUM": return "СРЕДНЯЯ ОПАСНОСТЬ";
-            case "LOW": return "НИЗКАЯ ОПАСНОСТЬ";
-            default: return threatLevel;
+        switch (threatLevel) {
+            case SPECIAL_GRADE: return "КРИТИЧЕСКАЯ ОПАСНОСТЬ";
+            case HIGH: return "ВЫСОКАЯ ОПАСНОСТЬ";
+            case MEDIUM: return "СРЕДНЯЯ ОПАСНОСТЬ";
+            case LOW: return "НИЗКАЯ ОПАСНОСТЬ";
+            default: return threatLevel.getDisplayName();
         }
     }
 

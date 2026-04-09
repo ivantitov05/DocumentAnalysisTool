@@ -1,9 +1,11 @@
 package MephiPackage.objects;
 
+import MephiPackage.enums.Visibility;
+
 public class EnvironmentConditions {
     private String weather;
     private String timeOfDay;
-    private String visibility;
+    private Visibility visibility;
     private Double cursedEnergyDensity;
 
     public EnvironmentConditions() {}
@@ -14,9 +16,15 @@ public class EnvironmentConditions {
     public String getTimeOfDay() { return timeOfDay; }
     public void setTimeOfDay(String timeOfDay) { this.timeOfDay = timeOfDay; }
 
-    public String getVisibility() { return visibility; }
-    public void setVisibility(String visibility) { this.visibility = visibility; }
+    public Visibility getVisibility() { return visibility; }
+    public void setVisibility(Visibility visibility) { this.visibility = visibility; }
+
+    public void setVisibility(String visibility) {
+        this.visibility = Visibility.fromString(visibility);
+    }
 
     public Double getCursedEnergyDensity() { return cursedEnergyDensity; }
-    public void setCursedEnergyDensity(Double cursedEnergyDensity) { this.cursedEnergyDensity = cursedEnergyDensity; }
+    public void setCursedEnergyDensity(Double cursedEnergyDensity) {
+        this.cursedEnergyDensity = cursedEnergyDensity;
+    }
 }

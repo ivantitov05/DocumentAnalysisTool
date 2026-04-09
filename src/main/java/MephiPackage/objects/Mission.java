@@ -1,6 +1,9 @@
 package MephiPackage.objects;
 
+import MephiPackage.utils.ValidationException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -132,6 +135,88 @@ public class Mission {
         this.curses.clear();
         if (curse != null) {
             this.curses.add(curse);
+        }
+    }
+
+    public List<String> validateRequiredFields() {
+        List<String> errors = new ArrayList<>();
+
+        if (missionId == null || missionId.trim().isEmpty()) {
+            errors.add("missionId: обязательное поле");
+        }
+        if (date == null || date.trim().isEmpty()) {
+            errors.add("date: обязательное поле");
+        }
+        if (location == null || location.trim().isEmpty()) {
+            errors.add("location: обязательное поле");
+        }
+        if (outcome == null) {
+            errors.add("outcome: обязательное поле");
+        }
+
+        if (curses == null || curses.isEmpty()) {
+            errors.add("curse: обязательный блок данных");
+        } else {
+            for (int i = 0; i < curses.size(); i++) {
+                Curse c = curses.get(i);
+                if (c.getName() == null || c.getName().trim().isEmpty()) {
+                    errors.add("curse[" + i + "].name: обязательное поле");
+                }
+                if (c.getThreatLevel() == null) {
+                    errors.add("curse[" + i + "].threatLevel: обязательное поле");
+                }
+            }
+        }
+
+        if (sorcerers != null && !sorcerers.isEmpty()) {
+            for (int i = 0; i < sorcerers.size(); i++) {
+                Sorcerer s = sorcerers.get(i);
+                if (s.getName() == null || s.getName().trim().isEmpty()) {
+                    errors.add("sorcerers[" + i + "].name: обязательное поле (при наличии блока)");
+                }
+                if (s.getRank() == null) {
+                    errors.add("sorcerers[" + i + "].rank: обязательное поле (при наличии блока)");
+                }
+            }
+        }
+
+        if (techniques != null && !techniques.isEmpty()) {
+            for (int i = 0; i < techniques.size(); i++) {
+                Technique t = techniques.get(i);
+                if (t.getName() == null || t.getName().trim().isEmpty()) {
+                    errors.add("techniques[" + i + "].name: обязательное поле (при наличии блока)");
+                }
+                if (t.getType() == null) {
+                    errors.add("techniques[" + i + "].type: обязательное поле (при наличии блока)");
+                }
+                if (t.getOwner() == null || t.getOwner().trim().isEmpty()) {
+                    errors.add("techniques[" + i + "].owner: обязательное поле (при наличии блока)");
+                }
+            }
+        }
+
+        if (operationTimeline != null && !operationTimeline.isEmpty()) {
+            for (int i = 0; i < operationTimeline.size(); i++) {
+                OperationTimeline event = operationTimeline.get(i);
+                if (event.getTimestamp() == null || event.getTimestamp().trim().isEmpty()) {
+                    errors.add("operationTimeline[" + i + "].timestamp: обязательное поле (при наличии блока)");
+                }
+                if (event.getType() == null || event.getType().trim().isEmpty()) {
+                    errors.add("operationTimeline[" + i + "].type: обязательное поле (при наличии блока)");
+                }
+                if (event.getDescription() == null || event.getDescription().trim().isEmpty()) {
+                    errors.add("operationTimeline[" + i + "].description: обязательное поле (при наличии блока)");
+                }
+            }
+        }
+
+        return errors;
+    }
+
+    public void validateRequiredFieldsOrThrow() throws ValidationException {
+        List<String> errors = validateRequiredFields();
+        if (!errors.isEmpty()) {
+            throw new ValidationException(String.join("\n  • ", errors));
         }
     }
 }

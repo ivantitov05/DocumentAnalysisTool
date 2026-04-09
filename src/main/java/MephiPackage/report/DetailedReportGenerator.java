@@ -292,8 +292,8 @@ public class DetailedReportGenerator implements ReportGenerator {
         return result;
     }
 
-    private String nullSafe(String str) {
-        return str != null ? str : "—";
+    private String nullSafe(Object obj) {
+        return obj != null ? obj.toString() : "—";
     }
 
     @Override

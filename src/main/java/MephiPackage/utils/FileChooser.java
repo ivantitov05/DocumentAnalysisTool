@@ -9,8 +9,17 @@ import java.util.stream.Collectors;
 
 public class FileChooser {
 
+    private static final String DEFAULT_DIRECTORY = "C:/Users/Ivan/Desktop/Java";
+
     public static File selectFile() {
         JFileChooser fileChooser = new JFileChooser();
+
+        File defaultDir = new File(DEFAULT_DIRECTORY);
+        if (defaultDir.exists() && defaultDir.isDirectory()) {
+            fileChooser.setCurrentDirectory(defaultDir);
+        } else {
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        }
 
         List<String> extensions = FileFormat.getAllExtensions();
 
