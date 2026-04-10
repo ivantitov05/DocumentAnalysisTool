@@ -41,13 +41,13 @@ MephiPackage\enums\EnemyMobility.class
 MephiPackage\utils\YAMLHandler.class
 MephiPackage\readers\JSONReader.class
 MephiPackage\report\RiskReportGenerator.class
-MephiPackage\utils\MissionPrinter.class
 MephiPackage\logging\EventListener.class
 MephiPackage\objects\EconomicAssessment.class
 MephiPackage\builders\MissionBuilder.class
 MephiPackage\readers\TXTReader.class
 MephiPackage\utils\XMLHandler.class
 MephiPackage\core\MissionTool.class
+MephiPackage\logging\MissionPrinter.class
 MephiPackage\objects\Sorcerer.class
 MephiPackage\readers\IniTXTReader.class
 MephiPackage\enums\PublicExposureRisk.class

@@ -7,7 +7,7 @@ import MephiPackage.logging.FileLogger;
 import MephiPackage.objects.Mission;
 import MephiPackage.report.ReportConfig;
 import MephiPackage.utils.FileChooser;
-import MephiPackage.utils.MissionPrinter;
+import MephiPackage.logging.MissionPrinter;
 import MephiPackage.utils.ValidationException;
 
 import javax.swing.*;
@@ -21,9 +21,9 @@ public class MissionTool {
 
         // Подписываем наблюдателей
         eventManager.subscribeToAll(new ConsoleLogger());
-
         FileLogger fileLogger = new FileLogger();
         eventManager.subscribeToAll(fileLogger);
+        eventManager.subscribe(EventType.MISSION_LOADED, MissionPrinter.getInstance());
 
         eventManager.notify(EventType.APP_START, "Запуск приложения");
 
@@ -43,7 +43,6 @@ public class MissionTool {
                     throw new ValidationException(errorMessage);
                 }
 
-                MissionPrinter.print(mission);
                 new MissionToolGUI(mission, new ReportConfig()).setVisible(true);
             }
 

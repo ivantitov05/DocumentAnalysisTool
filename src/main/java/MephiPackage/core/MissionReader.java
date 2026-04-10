@@ -1,5 +1,7 @@
 package MephiPackage.core;
 
+import MephiPackage.logging.EventManager;
+import MephiPackage.logging.EventType;
 import MephiPackage.objects.Mission;
 import MephiPackage.utils.FileFormat;
 import MephiPackage.utils.FileTypeDetector;
@@ -11,6 +13,7 @@ import java.util.function.Supplier;
 public class MissionReader {
 
     private static final EnumMap<FileFormat, Supplier<ReaderCreator>> CREATORS = new EnumMap<>(FileFormat.class);
+    private final EventManager eventManager = EventManager.getInstance();
 
     static {
         CREATORS.put(FileFormat.JSON, JSONReaderCreator::new);
@@ -30,7 +33,12 @@ public class MissionReader {
         }
 
         ReaderCreator creator = creatorSupplier.get();
-        return creator.readMission(file);
+        Mission mission = creator.readMission(file);
+
+        eventManager.notify(EventType.MISSION_LOADED,
+                "Загружена миссия: " + mission.getMissionId(), mission);
+
+        return mission;
     }
 
 //    public Mission readMission(DataSource source) throws IOException {

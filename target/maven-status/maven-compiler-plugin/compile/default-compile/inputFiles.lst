@@ -27,6 +27,7 @@ C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\l
 C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\logging\EventManager.java
 C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\logging\EventType.java
 C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\logging\FileLogger.java
+C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\logging\MissionPrinter.java
 C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\objects\CivilianImpact.java
 C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\objects\Curse.java
 C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\objects\EconomicAssessment.java
@@ -61,7 +62,6 @@ C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\u
 C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\utils\FileTypeDetector.java
 C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\utils\IniTXTHandler.java
 C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\utils\JSONHandler.java
-C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\utils\MissionPrinter.java
 C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\utils\StreamHandler.java
 C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\utils\TXTHandler.java
 C:\Users\Ivan\Documents\GitHub\DocumentAnalysisTool\src\main\java\MephiPackage\utils\TypeHandler.java
