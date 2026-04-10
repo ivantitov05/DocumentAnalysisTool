@@ -36,7 +36,7 @@ public class LegacyReaderAdapter implements Reader {
             builder.buildLocation(mission.getLocation());
         }
         if (mission.getOutcome() != null) {
-            builder.buildOutcome(mission.getOutcome());
+            builder.buildOutcome(mission.getOutcome().toString());
         }
         builder.buildDamageCost(mission.getDamageCost());
 

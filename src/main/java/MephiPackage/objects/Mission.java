@@ -1,5 +1,6 @@
 package MephiPackage.objects;
 
+import MephiPackage.enums.Outcome;
 import MephiPackage.utils.ValidationException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -12,7 +13,7 @@ public class Mission {
     private String missionId;
     private String date;
     private String location;
-    private String outcome;
+    private Outcome outcome;
     private long damageCost;
 
     private List<Curse> curses;
@@ -44,8 +45,12 @@ public class Mission {
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
 
-    public String getOutcome() { return outcome; }
-    public void setOutcome(String outcome) { this.outcome = outcome; }
+    public Outcome getOutcome() { return outcome; }
+    public void setOutcome(Outcome outcome) { this.outcome = outcome; }
+
+    public void setOutcome(String outcome) {
+        this.outcome = Outcome.fromString(outcome);
+    }
 
     public long getDamageCost() { return damageCost; }
     public void setDamageCost(long damageCost) { this.damageCost = damageCost; }

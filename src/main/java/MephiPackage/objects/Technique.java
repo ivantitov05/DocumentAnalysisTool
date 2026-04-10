@@ -1,8 +1,10 @@
 package MephiPackage.objects;
 
+import MephiPackage.enums.TechniquesType;
+
 public class Technique {
     private String name;
-    private String type;
+    private TechniquesType type;
     private long damage;
     private String owner;
 
@@ -16,12 +18,16 @@ public class Technique {
         this.name = name;
     }
 
-    public String getType() {
+    public TechniquesType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TechniquesType type) {
         this.type = type;
+    }
+
+    public void setType(String type) {
+        this.type = TechniquesType.fromString(type);
     }
 
     public long getDamage() {

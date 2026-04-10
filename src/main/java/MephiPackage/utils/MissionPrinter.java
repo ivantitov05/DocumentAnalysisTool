@@ -47,15 +47,16 @@ public class MissionPrinter {
     private static void printSorcerersInfo(List<Sorcerer> sorcerers) {
         System.out.println("Волшебники на задании:");
 
-        if (sorcerers.isEmpty()) {
+        if (sorcerers == null || sorcerers.isEmpty()) {
             System.out.println("Нет волшебников");
             return;
         }
 
         for (int i = 0; i < sorcerers.size(); i++) {
             Sorcerer s = sorcerers.get(i);
+            String rankDisplay = s.getRank() != null ? s.getRank().toString() : "-";
             System.out.println("  " + (i+1) + ". " + safeString(s.getName()) +
-                    " (ранг: " + safeString(s.getRank()) + ")");
+                    " (ранг: " + rankDisplay + ")");
         }
     }
 
@@ -77,12 +78,9 @@ public class MissionPrinter {
         }
     }
 
-    private static String safeString(String str) {
-        if (str != null){
-            return str;
-        }
-        else{
-            return "-";
-        }
+    private static String safeString(Object obj) {
+        if (obj == null) return "-";
+        String str = obj.toString();
+        return str.isEmpty() ? "-" : str;
     }
 }

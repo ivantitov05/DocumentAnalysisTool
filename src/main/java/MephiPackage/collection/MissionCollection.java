@@ -1,5 +1,6 @@
 package MephiPackage.collection;
 
+import MephiPackage.enums.Outcome;
 import MephiPackage.objects.Mission;
 import MephiPackage.filter.MissionFilter;
 
@@ -62,14 +63,19 @@ public class MissionCollection {
         Map<String, Integer> outcomeMap = new HashMap<>();
 
         for (Mission mission : missions) {
-            String outcome = mission.getOutcome();
-            if ("SUCCESS".equals(outcome)) successCount++;
-            else if ("FAILURE".equals(outcome)) failureCount++;
-            else if ("PARTIAL".equals(outcome)) partialCount++;
+            Outcome outcome = mission.getOutcome();
+            if (outcome == Outcome.SUCCESS) successCount++;
+            else if (outcome == Outcome.FAILURE) failureCount++;
+            else if (outcome == Outcome.PARTIAL) partialCount++;
 
-            outcomeMap.put(outcome, outcomeMap.getOrDefault(outcome, 0) + 1);
+            String outcomeStr = outcome != null ? outcome.toString() : "UNKNOWN";
+            outcomeMap.put(outcomeStr, outcomeMap.getOrDefault(outcomeStr, 0) + 1);
             totalDamage += mission.getDamageCost();
         }
+
+        stats.setOutcomeDistribution(outcomeMap);
+
+        stats.setOutcomeDistribution(outcomeMap);
 
         stats.setSuccessCount((int) successCount);
         stats.setFailureCount((int) failureCount);

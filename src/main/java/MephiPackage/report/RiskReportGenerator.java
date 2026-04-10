@@ -1,5 +1,6 @@
 package MephiPackage.report;
 
+import MephiPackage.enums.Outcome;
 import MephiPackage.enums.ThreatLevel;
 import MephiPackage.objects.Mission;
 import MephiPackage.objects.Curse;
@@ -68,7 +69,7 @@ public class RiskReportGenerator implements ReportGenerator {
             level += 1;
         }
 
-        String outcome = mission.getOutcome();
+        Outcome outcome = mission.getOutcome();
         if ("FAILURE".equals(outcome)) {
             level += 2;
         } else if ("PARTIAL".equals(outcome)) {
@@ -111,12 +112,12 @@ public class RiskReportGenerator implements ReportGenerator {
             }
         }
 
-        String outcome = mission.getOutcome();
-        if (outcome != null && !outcome.equalsIgnoreCase("SUCCESS")) {
+        Outcome outcome = mission.getOutcome();
+        if (outcome != null && outcome != Outcome.SUCCESS) {
             result += "  Результат миссии: " + outcome + "\n";
-            if (outcome.equalsIgnoreCase("FAILURE")) {
+            if (outcome == Outcome.FAILURE) {
                 result += "    Полный провал, требуется пересмотр стратегии\n";
-            } else if (outcome.equalsIgnoreCase("PARTIAL")) {
+            } else if (outcome == Outcome.PARTIAL) {
                 result += "    Частичный успех, цели достигнуты не полностью\n";
             }
         }
@@ -141,8 +142,8 @@ public class RiskReportGenerator implements ReportGenerator {
             }
         }
 
-        String outcome = mission.getOutcome();
-        if (outcome != null && outcome.equalsIgnoreCase("FAILURE")) {
+        Outcome outcome = mission.getOutcome();
+        if (outcome != null && outcome == Outcome.FAILURE) {
             result += "  МИССИЯ ПРОВАЛЕНА — требуется служебное расследование\n";
             hasCritical = true;
         }
@@ -184,12 +185,12 @@ public class RiskReportGenerator implements ReportGenerator {
             recommendationsCount++;
         }
 
-        String outcome = mission.getOutcome();
-        if (outcome != null && outcome.equalsIgnoreCase("FAILURE")) {
+        Outcome outcome = mission.getOutcome();
+        if (outcome != null && outcome == Outcome.FAILURE) {
             result += "  • Провести разбор причин провала с участием всех участников\n";
             result += "  • Пересмотреть тактику и подготовку группы\n";
             recommendationsCount++;
-        } else if (outcome != null && outcome.equalsIgnoreCase("PARTIAL")) {
+        } else if (outcome != null && outcome == Outcome.PARTIAL) {
             result += "  • Проанализировать невыполненные цели миссии\n";
             recommendationsCount++;
         }

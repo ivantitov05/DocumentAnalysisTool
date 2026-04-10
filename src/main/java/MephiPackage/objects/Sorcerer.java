@@ -1,12 +1,14 @@
 package MephiPackage.objects;
 
+import MephiPackage.enums.SorcererRank;
+
 public class Sorcerer {
     private String name;
-    private String rank;
+    private SorcererRank rank;  // ← тип enum
 
     public Sorcerer() {}
 
-    public Sorcerer(String name, String rank) {
+    public Sorcerer(String name, SorcererRank rank) {
         this.name = name;
         this.rank = rank;
     }
@@ -19,11 +21,15 @@ public class Sorcerer {
         this.name = name;
     }
 
-    public String getRank() {
+    public SorcererRank getRank() {
         return rank;
     }
 
-    public void setRank(String rank) {
+    public void setRank(SorcererRank rank) {
         this.rank = rank;
+    }
+
+    public void setRank(String rank) {
+        this.rank = SorcererRank.fromString(rank);
     }
 }

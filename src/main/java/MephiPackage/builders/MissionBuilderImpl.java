@@ -1,5 +1,6 @@
 package MephiPackage.builders;
 
+import MephiPackage.enums.Outcome;
 import MephiPackage.objects.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ public class MissionBuilderImpl implements MissionBuilder {
     private String missionId;
     private String date;
     private String location;
-    private String outcome;
+    private Outcome outcome;
     private long damageCost;
     private String comment;
 
@@ -54,7 +55,7 @@ public class MissionBuilderImpl implements MissionBuilder {
 
     @Override
     public MissionBuilder buildOutcome(String outcome) {
-        this.outcome = outcome;
+        this.outcome = Outcome.fromString(outcome);
         return this;
     }
 

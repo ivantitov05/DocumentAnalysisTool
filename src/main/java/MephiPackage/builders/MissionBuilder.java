@@ -1,5 +1,6 @@
 package MephiPackage.builders;
 
+import MephiPackage.enums.Outcome;
 import MephiPackage.objects.*;
 
 public interface MissionBuilder {

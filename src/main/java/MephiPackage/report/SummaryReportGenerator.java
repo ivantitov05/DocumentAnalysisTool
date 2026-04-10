@@ -120,8 +120,10 @@ public class SummaryReportGenerator implements ReportGenerator {
         return String.format("%,d", damage).replace(",", " ");
     }
 
-    private String nullSafe(String str) {
-        return str != null ? str : "—";
+    private String nullSafe(Object obj) {
+        if (obj == null) return "—";
+        String str = obj.toString();
+        return str.isEmpty() ? "—" : str;
     }
 
     @Override
